@@ -60,7 +60,7 @@ public class OkeyGame {
      * TODO: should randomly shuffle the tiles array before game starts
      */
     public void shuffleTiles() {
-        
+
         int index;
         Tile temp;
 
@@ -110,7 +110,20 @@ public class OkeyGame {
      * that player's tiles
      */
     public void discardTile(int tileIndex) {
+        Player currentPlayer = players[getCurrentPlayerIndex()];
+        lastDiscardedTile = currentPlayer.playerTiles[tileIndex];
 
+        /*  this will shift the elements in the array so that the space that discarded tile gave will be filled
+        however last element will repeat itself twice(in last 2 indexes) so i made the last index
+        null regardless which also helped in the other case of tileIndex being 14 */
+        if (tileIndex != 14) {
+
+            for ( int i = tileIndex; i < 14; i++){
+                currentPlayer.playerTiles[tileIndex] = currentPlayer.playerTiles[tileIndex + 1];
+            }
+        }
+
+        currentPlayer.playerTiles[14] = null; 
     }
 
     public void displayDiscardInformation() {
