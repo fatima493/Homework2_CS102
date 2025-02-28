@@ -13,7 +13,13 @@ public class Player {
      * TODO: removes and returns the tile in given index
      */
     public Tile getAndRemoveTile(int index) {
-        return null;
+        Tile original = playerTiles[index];
+        for (int i = index; i < playerTiles.length-1; i++) {
+            playerTiles[i]=playerTiles[i+1];
+        }
+        playerTiles[playerTiles.length-1]=null;
+
+        return original;
     }
 
     /*
@@ -22,7 +28,18 @@ public class Player {
      * make sure playerTiles are not more than 15 at any time
      */
     public void addTile(Tile t) {
+        if(numberOfTiles<15)
+        {
+            for (int i = 0; i < playerTiles.length; i++) {
+                if(playerTiles[i]==null)
+                {
+                    playerTiles[i]=t;
+                    numberOfTiles++;
+                }
+            }
+        }
 
+        else System.out.println("You can't take more tiles");
     }
 
     /*
@@ -32,7 +49,24 @@ public class Player {
      * @return
      */
     public boolean isWinningHand() {
-        return false;
+        int chainCount = 0;
+        int currentChainLength = 1;
+
+        for (int i = 1; i < playerTiles.length; i++) {
+            if (playerTiles[i].canFormChainWith(playerTiles[i - 1])) {
+                currentChainLength++;
+            } else {
+                if (currentChainLength == 4) {
+                    chainCount++;
+                }
+                currentChainLength = 1;
+            }
+        }
+
+        if (currentChainLength == 4) {
+            chainCount++;
+        }
+        return chainCount == 3;
     }
 
     public int findPositionOfTile(Tile t) {
