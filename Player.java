@@ -1,3 +1,4 @@
+
 public class Player {
     String playerName;
     Tile[] playerTiles;
@@ -26,14 +27,73 @@ public class Player {
     }
 
     /*
-     * TODO: checks if this player's hand satisfies the winning condition
+     * DONE: checks if this player's hand satisfies the winning condition
      * to win this player should have 3 chains of length 4, extra tiles
      * does not disturb the winning condition
      * @return
      */
     public boolean isWinningHand() {
-        return false;
+        //chain count 
+        int chainCount = 0;
+        
+        //already setted every index false by java
+        boolean[] usedNumbers = new boolean[7];
+        
+        //player's tiles count;
+        int tilesCount = playerTiles.length;
+        
+        
+        for(int i = 0; i < tilesCount; i++){
+            
+            if(playerTiles[i] != null){
+                if(!usedNumbers[playerTiles[i].getValue()-1]){
+                    
+                    //set isChecked to true
+                    usedNumbers[playerTiles[i].getValue()-1] = true;
+
+                    //create current number's colors list to check 
+                    char[] currentNumbersColors = new char[4];
+                    int colorCount = 0;
+
+
+                    //add current tile's color to the colors list
+                    currentNumbersColors[colorCount] = playerTiles[i].getColor();
+                    colorCount++;
+                    
+                    for(int j = i + 1; j < tilesCount; j++){
+                        //control for the same values
+                        if(playerTiles[j] != null && playerTiles[i].getValue() == playerTiles[j].getValue()){
+                            //control for the color
+                            boolean colorExists = false;
+                            for (int c = 0; c < colorCount; c++) {
+                                if (currentNumbersColors[c] == playerTiles[j].getColor()) {
+                                    colorExists = true;
+                                    break;
+                                }
+                            }
+                            if (!colorExists) {
+                                currentNumbersColors[colorCount] = playerTiles[j].getColor();
+                                colorCount++;
+                            } 
+
+                        }
+                    }
+
+                    if(colorCount == 4){
+                        chainCount++;
+                    }
+                }
+                
+                
+            }
+        } 
+        if(chainCount<3){
+            return false;
+        }else{
+            return true;
+        }
     }
+
 
     public int findPositionOfTile(Tile t) {
         int tilePosition = -1;
