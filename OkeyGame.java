@@ -53,7 +53,19 @@ public class OkeyGame {
      * it should return the toString method of the tile so that we can print what we picked
      */
     public String getTopTile() {
-        return null;
+
+        Tile topTile = tiles[0];
+        Player currentPlayer = players[currentPlayerIndex];
+
+        currentPlayer.addTile(topTile);
+
+        /* assuming the top tile is the 0th index(?) we give that tile to player and shift all the tiles -1 indexes
+         and returning the toString method of the topTile */
+         
+        for (int i = 0; i < tiles.length-2; i++){
+            tiles[i] = tiles [i+1];
+        }
+        return topTile.toString();
     }
 
     /*
