@@ -11,19 +11,36 @@ public class Player {
     }
 
     /*
-     * TODO: removes and returns the tile in given index
+     * DONE: removes and returns the tile in given index
      */
     public Tile getAndRemoveTile(int index) {
-        return null;
+        Tile original = playerTiles[index];
+        for (int i = index; i < playerTiles.length-1; i++) {
+            playerTiles[i]=playerTiles[i+1];
+        }
+        playerTiles[playerTiles.length-1]=null;
+
+        return original;
     }
 
     /*
-     * TODO: adds the given tile to the playerTiles in order
+     * DONE: adds the given tile to the playerTiles in order
      * should also update numberOfTiles accordingly.
      * make sure playerTiles are not more than 15 at any time
      */
     public void addTile(Tile t) {
+        if(numberOfTiles<15)
+        {
+            for (int i = 0; i < playerTiles.length; i++) {
+                if(playerTiles[i]==null)
+                {
+                    playerTiles[i]=t;
+                    numberOfTiles++;
+                }
+            }
+        }
 
+        else System.out.println("You can't take more tiles");
     }
 
     /*
