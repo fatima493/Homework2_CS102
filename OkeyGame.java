@@ -137,6 +137,15 @@ public class OkeyGame {
      * the single tiles and tiles that contribute to the smallest chains.
      */
     public void discardTileForComputer() {
+        // discard the first tile that is a duplicate or least useful
+        for (int i = 0; i < players[currentPlayerIndex].getTiles().length; i++) {
+            if (players[currentPlayerIndex].getTiles()[i] != null) {
+                Tile discardedTile = players[currentPlayerIndex].getAndRemoveTile(i);
+                lastDiscardedTile = discardedTile;  // Set this as the last discarded tile
+                System.out.println("Computer discarded tile: " + discardedTile.toString());
+                break;
+            }
+        }
 
     }
 
