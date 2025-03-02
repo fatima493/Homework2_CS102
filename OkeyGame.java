@@ -118,7 +118,16 @@ public class OkeyGame {
      * the current status. Print whether computer picks from tiles or discarded ones.
      */
     public void pickTileForComputer() {
-
+        // If the last discarded tile is useful, pick that
+        if (lastDiscardedTile != null && players[currentPlayerIndex].findPositionOfTile(lastDiscardedTile) == -1) {
+            System.out.println("Computer picked the discarded tile: " + lastDiscardedTile);
+            players[currentPlayerIndex].addTile(lastDiscardedTile);
+            lastDiscardedTile = null;  // Discarded tile is picked, so it's no longer available
+    } else {
+            String topTile = getTopTile();
+            System.out.println("Computer picked the top tile: " + topTile);
+            players[currentPlayerIndex].addTile(new Tile(Integer.parseInt(topTile.substring(0, 1)), topTile.charAt(1)));
+        }
     }
 
     /*
