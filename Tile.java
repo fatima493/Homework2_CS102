@@ -18,23 +18,13 @@ public class Tile {
      * Compares tiles so that they can be added to the hands in order
      */
     public int compareTo(Tile t) {
-        if(colorNameToInt() < t.colorNameToInt()) {
-            return -1;
-        }
-        else if(colorNameToInt() > t.colorNameToInt()) {
-            return 1;
-        }
-        else{
-             if(getValue() < t.getValue()) {
-                return -1;
+        
+        //original method rewritten to make it more useful
+        
+            if ( this.getValue() != t.getValue()){
+                return Integer.compare(getValue(), t.getValue());
             }
-            else if(getValue() > t.getValue()) {
-                return 1;
-            }
-            else{
-                return 0;
-            }
-        }
+            return Integer.compare(colorNameToInt(), t.colorNameToInt());
     }
 
     public int colorNameToInt() {

@@ -35,18 +35,34 @@ public class OkeyGame {
      * this method assumes the tiles are already shuffled
      */
     public void distributeTilesToPlayers() {
-        for(int i = 0; i <15; i++){
-            players[0].addTile(tiles[i]);
+       
+        int cou = 0;
+        while (cou < 15) {
+            players[0].addTile(tiles[0]);
+            
+            for (int t = 0; t < tiles.length-1; t++){
+                tiles[t] = tiles[t+1];
+                tiles[tiles.length-1] = null;
+            }
+
+            cou++;
         }
-        for(int i = 15; i <29; i++){
-            players[1].addTile(tiles[i]);
+         
+
+        for (int j = 1; j <=3 ; j++){
+            cou = 0;
+            while (cou < 14){
+                players[j].addTile(tiles[0]);
+                
+                for (int t = 0; t < tiles.length-1; t++){
+                    tiles[t] = tiles[t+1];
+                    tiles[tiles.length-1] = null;
+                }
+                cou++;
+            }
+
         }
-        for(int i = 29; i <43; i++){
-            players[2].addTile(tiles[i]);
-        }
-        for(int i = 43; i <57; i++){
-            players[3].addTile(tiles[i]);
-        }
+
             
     }
 
@@ -57,6 +73,7 @@ public class OkeyGame {
      */
     public String getLastDiscardedTile() {
         if (lastDiscardedTile != null) {
+            players[0].addTile(lastDiscardedTile);
             return lastDiscardedTile.toString();
         }
         return "No discarded tile yet.";
@@ -77,7 +94,7 @@ public class OkeyGame {
         /* assuming the top tile is the 0th index(?) we give that tile to player and shift all the tiles -1 indexes
          and returning the toString method of the topTile */
          
-        for (int i = 0; i < tiles.length-2; i++){
+        for (int i = 0; i < tiles.length-1; i++){
             tiles[i] = tiles [i+1];
         }
         return topTile.toString();
@@ -157,18 +174,9 @@ public class OkeyGame {
     public void discardTile(int tileIndex) {
         Player currentPlayer = players[getCurrentPlayerIndex()];
         lastDiscardedTile = currentPlayer.playerTiles[tileIndex];
+        
+        System.out.println(currentPlayer.getName() + " has discarded " + currentPlayer.getAndRemoveTile(tileIndex) );
 
-        /*  this will shift the elements in the array so that the space that discarded tile gave will be filled
-        however last element will repeat itself twice(in last 2 indexes) so i made the last index
-        null regardless which also helped in the other case of tileIndex being 14 */
-        if (tileIndex != 14) {
-
-            for ( int i = tileIndex; i < 14; i++){
-                currentPlayer.playerTiles[tileIndex] = currentPlayer.playerTiles[tileIndex + 1];
-            }
-        }
-
-        currentPlayer.playerTiles[14] = null; 
     }
 
     public void displayDiscardInformation() {

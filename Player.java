@@ -15,10 +15,15 @@ public class Player {
      */
     public Tile getAndRemoveTile(int index) {
         Tile original = playerTiles[index];
-        for (int i = index; i < playerTiles.length-1; i++) {
-            playerTiles[i]=playerTiles[i+1];
+        if (index != 14){
+            for (int i = index; i < playerTiles.length-1; i++) {
+                playerTiles[i]=playerTiles[i+1];
+            }
+            
         }
+        
         playerTiles[playerTiles.length-1]=null;
+        numberOfTiles--;
 
         return original;
     }
@@ -31,13 +36,18 @@ public class Player {
     public void addTile(Tile t) {
         if(numberOfTiles<15)
         {
-            for (int i = 0; i < playerTiles.length; i++) {
-                if(playerTiles[i]==null)
-                {
-                    playerTiles[i]=t;
-                    numberOfTiles++;
-                }
+
+            int index= 0;
+            while (index < numberOfTiles && t.compareTo(playerTiles[index]) > 0){
+                index ++;
             }
+
+            for (int i = numberOfTiles; i > index; i--){
+                playerTiles[i] = playerTiles[i-1];
+            }
+
+            playerTiles[index] = t;
+            numberOfTiles ++;      
         }
 
         else System.out.println("You can't take more tiles");
@@ -140,5 +150,23 @@ public class Player {
 
     public String getName() {
         return playerName;
+    }
+
+    private void orderTiles() {
+        int n = numberOfTiles;
+
+        
+        for (int i = 0; i < n; i++) {
+            boolean flag = true;
+            for (int j = 0; j < n && flag; j++){
+                if (playerTiles[j].compareTo(playerTiles[i]) == -1){
+                    Tile temp = playerTiles[i];
+                    playerTiles[i] = playerTiles[j];
+                    playerTiles[j] = temp;
+                    flag = false;
+
+                }
+            }
+        }
     }
 }
