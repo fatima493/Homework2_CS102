@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class OkeyGame {
@@ -138,6 +140,7 @@ public class OkeyGame {
      */
     public void pickTileForComputer() {
         // If the last discarded tile is useful, pick that
+        /* 
         if (lastDiscardedTile != null && players[currentPlayerIndex].findPositionOfTile(lastDiscardedTile) == -1) {
             System.out.println("Computer picked the discarded tile: " + lastDiscardedTile);
             players[currentPlayerIndex].addTile(lastDiscardedTile);
@@ -146,6 +149,38 @@ public class OkeyGame {
             String topTile = getTopTile();
             System.out.println("Computer picked the top tile: " + topTile);
             players[currentPlayerIndex].addTile(new Tile(Integer.parseInt(topTile.substring(0, 1)), topTile.charAt(1)));
+        }
+
+        */
+
+        Player curPlayer = players[currentPlayerIndex];
+        Tile[] hand = curPlayer.getTiles();
+        if (lastDiscardedTile != null){
+            int val = lastDiscardedTile.getValue();
+            int color = lastDiscardedTile.colorNameToInt();
+            int chainCou = 0;
+            int sameCou = 0;
+            for (int i = 0; i < hand.length; i++){
+                if (hand[i] != null && hand[i].getValue() == val && hand[i].colorNameToInt() != color){
+                    chainCou++;
+                }
+
+                if ( hand[i] != null && hand[i].getValue() == val && hand [i].colorNameToInt() == color){
+                    sameCou++;
+                }
+            }
+
+            if ( chainCou != 0 && sameCou == 0){
+                System.out.println("Computer picked the discarded tile: " + lastDiscardedTile);
+                curPlayer.addTile(lastDiscardedTile);
+                lastDiscardedTile = null;
+            }
+            else {
+                String topTile = getTopTile();
+                System.out.println("Computer picked the top tile: " + topTile);
+            }
+
+            
         }
     }
 
@@ -156,6 +191,7 @@ public class OkeyGame {
      * the single tiles and tiles that contribute to the smallest chains.
      */
     public void discardTileForComputer() {
+        
         
         // discard the first tile that is a duplicate or least useful
         /*Tile[] tiles = players[currentPlayerIndex].getTiles();
@@ -188,15 +224,117 @@ public class OkeyGame {
             players[currentPlayerIndex].getAndRemoveTile(players[currentPlayerIndex].findPositionOfTile(tileToDiscard));
             System.out.println("Computer discarded tile: " + tileToDiscard.toString());
         }*/
-        for (int i = 0; i < players[currentPlayerIndex].getTiles().length; i++) {
+
+        /*for (int i = 0; i < players[currentPlayerIndex].getTiles().length; i++) {
             if (players[currentPlayerIndex].getTiles()[i] != null) {
                 Tile discardedTile = players[currentPlayerIndex].getAndRemoveTile(i);
                 lastDiscardedTile = discardedTile;  // Set this as the last discarded tile
                 System.out.println("Computer discarded tile: " + discardedTile.toString());
                 break;
             }
+        }*/
+
+        lastDiscardedTile = null;
+        Tile[] hand = players[currentPlayerIndex].getTiles();
+        int[] count = new int[8];  // the indexes of this array will contain that tile numbers count excluding 0
+        int[][] colorCount = new int[8][4];  //color array of each tile number
+
+        for (Tile tile : hand){
+            if (tile != null) {
+                int value = tile.getValue();
+                count[value]++;
+                colorCount[value][tile.colorNameToInt()]++;
+            }
         }
 
+        
+        int discardIndex = -1;
+
+        for (int t = 0; t < hand.length; t++){
+            Tile tile = hand[t];
+            if (tile == null) continue;
+
+            int val = tile.getValue();
+            int colorIndex = tile.colorNameToInt();
+
+            if ( colorCount[val][colorIndex] > 1) {
+                lastDiscardedTile = tile;
+                discardIndex = t;
+                players[currentPlayerIndex].getAndRemoveTile(discardIndex);
+                System.out.println("Computer discarded tile: " + lastDiscardedTile.toString());
+                break;
+            }
+        }
+
+        if (lastDiscardedTile == null){
+            for (int i = 0; i < hand.length; i++){
+                
+                Tile tile = hand[i];
+                int val = tile.getValue();
+                int colorIndex = tile.colorNameToInt();
+
+                int diffColorCou = 0;
+                for (int j = 0; j < 4; j++){
+                    if ( j != colorIndex && colorCount[val][j] > 0){
+                        diffColorCou++;
+                    }
+                }
+
+                if ( diffColorCou == 0){       // tile with no matches will be discarded
+                    lastDiscardedTile = tile;
+                    discardIndex = i;
+                    players[currentPlayerIndex].getAndRemoveTile(discardIndex);
+                    System.out.println("Computer discarded tile: " + lastDiscardedTile.toString());
+                    break;
+                }
+            }
+
+               
+        }
+
+        //if there isnt any duplicate or not matching tiles then randomly discard a tile of shortest chain
+
+        if ( lastDiscardedTile == null){
+
+            Player curPlayer = players[currentPlayerIndex];
+            int prev = Integer.MAX_VALUE;
+            int min = 0;
+            int tileNum = -1;
+            for (int i = 0; i < count.length; i++){
+                if (count[i] != 0){
+                    if (count[i] < prev){
+                        min = count[i];
+                        tileNum = i;
+                    }
+                    prev = count[i];
+                }
+            }
+
+            if (min != 0){
+                ArrayList<Integer> indexList = curPlayer.getIndexesOfSameNumberedTiles(tileNum);
+                Collections.shuffle(indexList);
+                int ranIndex = indexList.get(0);
+                lastDiscardedTile = curPlayer.getTiles()[ranIndex];
+                curPlayer.getAndRemoveTile(ranIndex);
+                System.out.println("Computer discarded tile: " + lastDiscardedTile.toString());
+            }
+        }
+
+
+        //if none works computer will decide randomly to discard
+
+        if(lastDiscardedTile == null){
+            Random ran = new Random();
+            int ranIndex= ran.nextInt(hand.length);
+            discardIndex = ranIndex;
+            Player curPlayer = players[currentPlayerIndex];
+            lastDiscardedTile = curPlayer.getTiles()[ranIndex];
+            
+
+            curPlayer.getAndRemoveTile(discardIndex);
+            System.out.println("Computer discarded tile: " + lastDiscardedTile.toString());
+            
+        }
 
     }
 

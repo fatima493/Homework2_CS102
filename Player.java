@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Player {
     String playerName;
@@ -138,21 +139,14 @@ public class Player {
         return playerName;
     }
 
-    private void orderTiles() {
-        int n = numberOfTiles;
-
-        
-        for (int i = 0; i < n; i++) {
-            boolean flag = true;
-            for (int j = 0; j < n && flag; j++){
-                if (playerTiles[j].compareTo(playerTiles[i]) == -1){
-                    Tile temp = playerTiles[i];
-                    playerTiles[i] = playerTiles[j];
-                    playerTiles[j] = temp;
-                    flag = false;
-
-                }
+    public ArrayList <Integer> getIndexesOfSameNumberedTiles(int num) {
+        ArrayList<Integer> indexList = new ArrayList<>();
+        for (int i = 0; i < numberOfTiles; i++){
+            if ( num == playerTiles[i].getValue()){
+                indexList.add(i);
             }
         }
+
+        return indexList;
     }
 }
