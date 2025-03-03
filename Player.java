@@ -60,76 +60,62 @@ public class Player {
      * @return
      */
     public boolean isWinningHand() {
-        //chain count 
         int chainCount = 0;
-        
-        //already setted every index false by java
         boolean[] usedNumbers = new boolean[7];
-        
-        //player's tiles count;
-        int tilesCount = playerTiles.length;
-        
-        
-        for(int i = 0; i < tilesCount; i++){
-            
-            if(playerTiles[i] != null){
-                if(!usedNumbers[playerTiles[i].getValue()-1]){
-                    
-                    //set isChecked to true
-                    usedNumbers[playerTiles[i].getValue()-1] = true;
 
-                    //create current number's colors list to check 
-                    char[] currentNumbersColors = new char[4];
-                    int colorCount = 0;
+        for(int i = 0; i < numberOfTiles; i++){
+            if(playerTiles[i] != null && !usedNumbers[playerTiles[i].getValue()-1]){
+                usedNumbers[playerTiles[i].getValue()-1] = true;
 
+                char[] currentNumbersColors = new char[4];
+                int colorCount = 0;
 
-                    //add current tile's color to the colors list
-                    currentNumbersColors[colorCount] = playerTiles[i].getColor();
-                    colorCount++;
-                    
-                    for(int j = i + 1; j < tilesCount; j++){
-                        //control for the same values
-                        if(playerTiles[j] != null && playerTiles[i].getValue() == playerTiles[j].getValue()){
-                            //control for the color
-                            boolean colorExists = false;
-                            for (int c = 0; c < colorCount; c++) {
-                                if (currentNumbersColors[c] == playerTiles[j].getColor()) {
-                                    colorExists = true;
-                                    break;
-                                }
+                currentNumbersColors[colorCount] = playerTiles[i].getColor();
+                colorCount++;
+
+                for(int j = i + 1; j < numberOfTiles; j++){
+                    if(playerTiles[j] != null && playerTiles[i].getValue() == playerTiles[j].getValue()){
+                        boolean colorExists = false;
+                        for (int c = 0; c < colorCount; c++) {
+                            if (currentNumbersColors[c] == playerTiles[j].getColor()) {
+                                colorExists = true;
+                                break;
                             }
-                            if (!colorExists) {
-                                currentNumbersColors[colorCount] = playerTiles[j].getColor();
-                                colorCount++;
-                            } 
-
+                        }
+                        if (!colorExists) {
+                            currentNumbersColors[colorCount] = playerTiles[j].getColor();
+                            colorCount++;
                         }
                     }
-
-                    if(colorCount == 4){
-                        chainCount++;
-                    }
                 }
-                
-                
+
+                if(colorCount == 4){
+                    chainCount++;
+                }
             }
-        } 
-        if(chainCount<3){
-            return false;
-        }else{
-            return true;
         }
+
+        return chainCount >= 3;
+
     }
 
 
     public int findPositionOfTile(Tile t) {
+        /*
+        for (int i = 0; i < numberOfTiles; i++) {
+            if(playerTiles[i].compareTo(t) == 0) {
+                return i;
+            }
+        }
+        return -1;*/
         int tilePosition = -1;
         for (int i = 0; i < numberOfTiles; i++) {
             if(playerTiles[i].compareTo(t) == 0) {
-                tilePosition = i;
+                tilePosition= i;
             }
         }
         return tilePosition;
+
     }
 
     public void displayTiles() {

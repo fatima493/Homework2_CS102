@@ -20,7 +20,7 @@ public class ApplicationMain {
 
         // developer mode is used for seeing the computer players hands, to be used for debugging
         System.out.print("Play in developer's mode with other player's tiles visible? (Y/N): ");
-        char devMode = sc.next().charAt(0);
+        char devMode = sc.next().toUpperCase().charAt(0);
         boolean devModeOn = devMode == 'Y';
         
         boolean firstTurn = true;
@@ -29,6 +29,7 @@ public class ApplicationMain {
 
         while(gameContinues) {
             
+            System.out.println("");
             int currentPlayer = game.getCurrentPlayerIndex();
             System.out.println(game.getCurrentPlayerName() + "'s turn.");
             
@@ -80,10 +81,13 @@ public class ApplicationMain {
 
                     // TODO: make sure the given index is correct, should be 0 <= index <= 14
 
-                    game.discardTile(playerChoice);
-                    game.passTurnToNextPlayer();
-                }
-                else{
+                    if (playerChoice >= 0 && playerChoice < 15) {
+                        game.discardTile(playerChoice);
+                        game.passTurnToNextPlayer();
+                    } else {
+                        System.out.println("Invalid index. Please try again.");
+                    }
+                }else{
                     // if we finish the hand we win
                     System.out.println("Congratulations, you win!");
                 }

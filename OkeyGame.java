@@ -73,7 +73,7 @@ public class OkeyGame {
      */
     public String getLastDiscardedTile() {
         if (lastDiscardedTile != null) {
-            players[0].addTile(lastDiscardedTile);
+            players[currentPlayerIndex].addTile(lastDiscardedTile);
             return lastDiscardedTile.toString();
         }
         return "No discarded tile yet.";
@@ -97,6 +97,8 @@ public class OkeyGame {
         for (int i = 0; i < tiles.length-1; i++){
             tiles[i] = tiles [i+1];
         }
+        tiles[tiles.length - 1] = null;
+
         return topTile.toString();
     }
 
@@ -154,7 +156,38 @@ public class OkeyGame {
      * the single tiles and tiles that contribute to the smallest chains.
      */
     public void discardTileForComputer() {
+        
         // discard the first tile that is a duplicate or least useful
+        /*Tile[] tiles = players[currentPlayerIndex].getTiles();
+        Tile tileToDiscard = null;
+
+        // First, try to discard duplicates
+        for (int i = 0; i < tiles.length; i++) {
+            if (tiles[i] != null) {
+                for (int j = i + 1; j < tiles.length; j++) {
+                    if (tiles[j] != null && tiles[i].getValue() == tiles[j].getValue() && tiles[i].getColor() == tiles[j].getColor()) {
+                        tileToDiscard = tiles[i];
+                        break;
+                    }
+                }
+                if (tileToDiscard != null) break;
+            }
+        }
+        if (tileToDiscard == null) {
+            tileToDiscard = tiles[0]; // Default to the first tile
+            for (int i = 1; i < tiles.length; i++) {
+                if (tiles[i] != null && tiles[i].getValue() < tileToDiscard.getValue()) {
+                    tileToDiscard = tiles[i];
+                }
+            }
+        }
+
+        // Discard the tile
+        if (tileToDiscard != null) {
+            lastDiscardedTile = tileToDiscard;
+            players[currentPlayerIndex].getAndRemoveTile(players[currentPlayerIndex].findPositionOfTile(tileToDiscard));
+            System.out.println("Computer discarded tile: " + tileToDiscard.toString());
+        }*/
         for (int i = 0; i < players[currentPlayerIndex].getTiles().length; i++) {
             if (players[currentPlayerIndex].getTiles()[i] != null) {
                 Tile discardedTile = players[currentPlayerIndex].getAndRemoveTile(i);
@@ -163,6 +196,7 @@ public class OkeyGame {
                 break;
             }
         }
+
 
     }
 
